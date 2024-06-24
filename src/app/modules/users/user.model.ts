@@ -30,16 +30,6 @@ const userSchema = new Schema<UserDocument>(
     address: {
       type: String,
     },
-    isDeleted: {
-      type: Boolean,
-      default: false,
-    },
-    status: {
-      type: String,
-      enum: ['active', 'blocked'],
-      default: 'active',
-    },
-    passwordChangedAt: Date,
   },
   { timestamps: true },
 );
@@ -65,17 +55,6 @@ userSchema.statics.isUserExistsByCustomId = async function (userId: string) {
 
 userSchema.statics.isUserExistsByEmail = async function (email: string) {
   return await this.findOne({ email });
-};
-
-userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
-  passwordChangedAt: Date,
-  iat: number,
-) {
-  if (passwordChangedAt) {
-    const changedTimestamp = passwordChangedAt.getTime() / 1000;
-    return iat < changedTimestamp;
-  }
-  return false;
 };
 
 export const User = model<UserDocument, UserModel>('User', userSchema);

@@ -7,9 +7,6 @@ export interface IUser {
   email: string;
   password: string;
   role: TUserRole;
-  isDeleted: boolean;
-  status: 'active' | 'blocked';
-  passwordChangedAt?: Date;
   phone: string;
   address: string;
 }
@@ -26,8 +23,4 @@ export interface UserDocument extends IUser, Document {}
 export interface UserModel extends Model<UserDocument> {
   isUserExistsByEmail(email: string): Promise<UserDocument | null>;
   isUserExistsByCustomId(id: string): Promise<UserDocument | null>;
-  isJWTIssuedBeforePasswordChanged(
-    passwordChangedAt: Date,
-    iat: number,
-  ): boolean;
 }

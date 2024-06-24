@@ -56,7 +56,7 @@ const signup = async (payload: TSignupUser): Promise<TLoginResponse> => {
     statusCode: 200,
     message: 'User registered successfully',
     data: {
-      _id: newUser._id,
+      _id: newUser._id as string,
       name: newUser.name,
       email: newUser.email,
       role: newUser.role,
@@ -109,7 +109,7 @@ const login = async (payload: TLoginUser): Promise<TLoginResponse> => {
     message: 'User logged in successfully',
     token: accessToken, // Adjust if necessary based on your response format
     data: {
-      _id: user._id,
+      _id: user._id as string,
       name: user.name,
       email: user.email,
       role: user.role,

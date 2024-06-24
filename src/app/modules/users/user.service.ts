@@ -1,4 +1,4 @@
-import { User } from './user.model'; // Correct import here
+import { User } from './user.model';
 import { CreateUserInput, UserDocument } from './user.interface';
 
 export const createUser = async (
