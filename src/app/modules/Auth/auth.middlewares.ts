@@ -11,7 +11,10 @@ const isAuthenticated = catchAsync(
     const token = req.headers.authorization;
 
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authenticated!');
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You have no access to this route!',
+      );
     }
 
     const decoded = jwt.verify(
