@@ -1,9 +1,17 @@
 import { Facility } from './facility.model';
 import { IFacility } from './facility.interface';
 
-const createFacility = async (facilityData: IFacility) => {
-  const facility = new Facility(facilityData);
-  return await facility.save();
+const createFacility = async (facilityData: any) => {
+  const facility = new Facility({ ...facilityData });
+  await facility.save();
+};
+
+const getAllFacilities = async () => {
+  return await Facility.find({ isDeleted: false });
+};
+
+const getFacilityById = async (id: string) => {
+  return await Facility.findById(id);
 };
 
 const updateFacility = async (id: string, updateData: Partial<IFacility>) => {
@@ -16,14 +24,6 @@ const deleteFacility = async (id: string) => {
     { isDeleted: true },
     { new: true },
   );
-};
-
-const getAllFacilities = async () => {
-  return await Facility.find({ isDeleted: false });
-};
-
-const getFacilityById = async (id: string) => {
-  return await Facility.findById(id);
 };
 
 export const FacilityService = {

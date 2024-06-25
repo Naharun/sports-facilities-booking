@@ -1,7 +1,7 @@
 import cors from 'cors';
 import express, { Application, Request, Response } from 'express';
-import globalErrorHandler from './app/middlewares/globalErrorHandler'; // Ensure correct path
-import notFound from './app/middlewares/notFound'; // Ensure correct path
+import globalErrorHandler from './app/middlewares/globalErrorHandler';
+import notFound from './app/middlewares/notFound';
 import { AuthRoutes } from './app/modules/Auth/auth.route';
 import { FacilityRoutes } from './app/modules/facility/facility.route';
 import { BookingRoutes } from './app/modules/booking/booking.route';

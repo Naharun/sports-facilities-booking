@@ -3,10 +3,10 @@ import { Request, Response, NextFunction } from 'express';
 import AppError from '../../errors/AppError';
 
 const createFacilitySchema = z.object({
-  name: z.string().nonempty(),
-  description: z.string().nonempty(),
+  name: z.string(),
+  description: z.string(),
   pricePerHour: z.number().positive(),
-  location: z.string().nonempty(),
+  location: z.string(),
 });
 
 const updateFacilitySchema = z.object({

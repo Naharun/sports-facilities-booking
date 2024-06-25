@@ -4,9 +4,24 @@ import catchAsync from '../../utils/catchAsync';
 import AppError from '../../errors/AppError';
 import { Facility } from './facility.model';
 
+const createFacility = catchAsync(async (req: Request, res: Response) => {
+  const facility = await Facility.create(req.body);
+  res.status(httpStatus.OK).json({
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Facility added successfully',
+    data: facility,
+  });
+});
+
 const getAllFacilities = catchAsync(async (req: Request, res: Response) => {
   const facilities = await Facility.find();
-  res.status(httpStatus.OK).json({ facilities });
+  res.status(httpStatus.OK).json({
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Facilities retrieved successfully',
+    data: facilities,
+  });
 });
 
 const getFacilityById = catchAsync(
@@ -21,11 +36,6 @@ const getFacilityById = catchAsync(
   },
 );
 
-const createFacility = catchAsync(async (req: Request, res: Response) => {
-  const facility = await Facility.create(req.body);
-  res.status(httpStatus.CREATED).json({ facility });
-});
-
 const updateFacility = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const facility = await Facility.findByIdAndUpdate(req.params.id, req.body, {
@@ -36,8 +46,12 @@ const updateFacility = catchAsync(
     if (!facility) {
       return next(new AppError(httpStatus.NOT_FOUND, 'Facility not found'));
     }
-
-    res.status(httpStatus.OK).json({ facility });
+    res.status(httpStatus.OK).json({
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Facility updated successfully',
+      data: facility,
+    });
   },
 );
 
@@ -49,7 +63,12 @@ const deleteFacility = catchAsync(
       return next(new AppError(httpStatus.NOT_FOUND, 'Facility not found'));
     }
 
-    res.status(httpStatus.NO_CONTENT).send();
+    res.status(httpStatus.OK).json({
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Facility deleted successfully',
+      data: facility,
+    });
   },
 );
 
