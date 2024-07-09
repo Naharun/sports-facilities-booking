@@ -57,7 +57,11 @@ const updateFacility = catchAsync(
 
 const deleteFacility = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const facility = await Facility.findByIdAndDelete(req.params.id);
+    const facility = await Facility.findByIdAndUpdate(
+      req.params.id,
+      { isDeleted: true },
+      { new: true },
+    );
 
     if (!facility) {
       return next(new AppError(httpStatus.NOT_FOUND, 'Facility not found'));
