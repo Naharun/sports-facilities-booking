@@ -1,25 +1,27 @@
 import { Response } from 'express';
 
-// Define a type for your response structure
 type TResponse<T> = {
-  statusCode: number;
   success: boolean;
+  statusCode: number;
   message?: string;
+  token?: string;
   data: T;
 };
 
-// Define the sendResponse function
 const sendResponse = <T>(res: Response, data: TResponse<T>) => {
   const {
-    statusCode = 200,
     success = true,
+    statusCode = 200,
     message,
+    token,
     data: responseData,
   } = data;
 
   res.status(statusCode).json({
     success,
+    statusCode,
     message,
+    token,
     data: responseData,
   });
 };

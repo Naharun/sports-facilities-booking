@@ -7,10 +7,10 @@ import sendResponse from '../../utils/sendResponse';
 const signup = catchAsync(async (req: Request, res: Response) => {
   const result = await AuthService.signup(req.body);
   sendResponse(res, {
-    statusCode: httpStatus.CREATED,
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'User created successfully!',
-    data: result,
+    message: 'User registered successfully',
+    data: result.data,
   });
 });
 
@@ -21,7 +21,8 @@ const login = catchAsync(async (req: Request, res: Response) => {
     statusCode: httpStatus.OK,
     success: true,
     message: 'User logged in successfully!',
-    data: result,
+    token: result.accessToken,
+    data: result.data,
   });
 });
 

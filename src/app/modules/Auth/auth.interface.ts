@@ -28,6 +28,8 @@ export type TLoginResponse = {
   statusCode: number;
   message: string;
   token?: string;
+  accessToken?: string;
+  refreshToken?: string;
   data: {
     _id: string;
     name: string;
@@ -35,8 +37,6 @@ export type TLoginResponse = {
     role: string;
     phone: string;
     address: string;
-    accessToken?: string;
-    refreshToken?: string;
   };
 };
 
