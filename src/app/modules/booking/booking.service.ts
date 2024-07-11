@@ -30,7 +30,15 @@ const createBooking = async (
 };
 
 const getAllBookings = async () => {
-  const bookings = await Booking.find().populate('facility user');
+  const bookings = await Booking.find()
+    .populate({
+      path: 'facility',
+      select: '_id name description pricePerHour location isDeleted',
+    })
+    .populate({
+      path: 'user',
+      select: '_id name email phone role address',
+    });
   return bookings;
 };
 

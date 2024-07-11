@@ -5,6 +5,7 @@ import AppError from '../../errors/AppError';
 import { Facility } from '../facility/facility.model';
 import { BookingService, getAvailableTimeSlots } from './booking.service';
 import { Booking } from './booking.model';
+import { formatDate } from '../../utils/dateFormatter';
 
 const checkAvailability = async (req: Request, res: Response) => {
   const date =
@@ -18,6 +19,7 @@ const checkAvailability = async (req: Request, res: Response) => {
     data: availableSlots,
   });
 };
+
 const createBooking = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const { facility, date, startTime, endTime } = req.body;
@@ -53,11 +55,17 @@ const createBooking = catchAsync(
       bookingData,
       payableAmount,
     );
+
+    const formattedDate = formatDate(new Date(response.date));
+
     res.status(httpStatus.OK).json({
       success: true,
       statusCode: httpStatus.OK,
       message: 'Booking created successfully',
-      data: response,
+      data: {
+        ...response.toObject(),
+        date: formattedDate,
+      },
     });
   },
 );
@@ -65,30 +73,43 @@ const createBooking = catchAsync(
 const getAllBookings = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const response = await BookingService.getAllBookings();
+
+    const formattedResponse = response.map((booking) => ({
+      ...booking.toObject(),
+      date: formatDate(new Date(booking.date)),
+    }));
+
     res.status(httpStatus.OK).json({
       success: true,
       statusCode: httpStatus.OK,
       message: 'Bookings retrieved successfully',
-      data: response,
+      data: formattedResponse,
     });
   },
 );
 
-export const getUserBookings = catchAsync(
+const getUserBookings = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     if (!req.user) {
       throw new AppError(httpStatus.UNAUTHORIZED, 'User not authenticated');
     }
     const userId = req.user.userId;
     const response = await BookingService.getUserBookings(userId);
+
+    const formattedResponse = response.map((booking) => ({
+      ...booking.toObject(),
+      date: formatDate(new Date(booking.date)),
+    }));
+
     res.status(httpStatus.OK).json({
       success: true,
       statusCode: httpStatus.OK,
       message: 'Bookings retrieved successfully',
-      data: response,
+      data: formattedResponse,
     });
   },
 );
+
 const cancelBooking = catchAsync(async (req: Request, res: Response) => {
   const bookingId = req.params.id;
 
@@ -110,11 +131,16 @@ const cancelBooking = catchAsync(async (req: Request, res: Response) => {
   booking.isBooked = 'canceled';
   await booking.save();
 
+  const formattedDate = formatDate(new Date(booking.date));
+
   res.status(httpStatus.OK).json({
     success: true,
     statusCode: httpStatus.OK,
     message: 'Booking cancelled successfully',
-    data: booking,
+    data: {
+      ...booking.toObject(),
+      date: formattedDate,
+    },
   });
 });
 
