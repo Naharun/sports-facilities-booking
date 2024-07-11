@@ -30,7 +30,7 @@ const createBooking = async (
 };
 
 const getAllBookings = async () => {
-  const bookings = await Booking.find()
+  const bookings = await Booking.find({ isBooked: { $ne: 'canceled' } })
     .populate({
       path: 'facility',
       select: '_id name description pricePerHour location isDeleted',
@@ -43,7 +43,10 @@ const getAllBookings = async () => {
 };
 
 const getUserBookings = async (userId: string) => {
-  const bookings = await Booking.find({ user: userId }).populate('facility');
+  const bookings = await Booking.find({
+    user: userId,
+    isBooked: { $ne: 'canceled' },
+  }).populate('facility');
   return bookings;
 };
 

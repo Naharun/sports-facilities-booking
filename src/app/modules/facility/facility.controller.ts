@@ -3,6 +3,7 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import AppError from '../../errors/AppError';
 import { Facility } from './facility.model';
+import { FacilityService } from './facility.service';
 
 const createFacility = catchAsync(async (req: Request, res: Response) => {
   const facility = await Facility.create(req.body);
@@ -15,7 +16,7 @@ const createFacility = catchAsync(async (req: Request, res: Response) => {
 });
 
 const getAllFacilities = catchAsync(async (req: Request, res: Response) => {
-  const facilities = await Facility.find();
+  const facilities = await FacilityService.getAllFacilities();
   res.status(httpStatus.OK).json({
     success: true,
     statusCode: httpStatus.OK,
