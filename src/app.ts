@@ -40,7 +40,7 @@ import { BookingRoutes } from './app/modules/booking/booking.route';
 const app: Application = express();
 
 // Middleware configuration for CORS
-const allowedOrigins = ['http://localhost:5173']; // Add your frontend origin
+const allowedOrigins = ['https://sports-facilities-booking-client.vercel.app/']; // Add your frontend origin
 
 const corsOptions = {
   origin: allowedOrigins,
