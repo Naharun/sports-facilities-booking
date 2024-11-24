@@ -9,4 +9,5 @@ export interface IBooking extends Document {
   user: mongoose.Types.ObjectId;
   payableAmount: number | string;
   isBooked: 'confirmed' | 'canceled';
+  transactionId?: string;
 }

@@ -14,13 +14,13 @@ router.post(
   BookingController.createBooking,
 );
 router.get(
-  '/bookings',
+  '/admin/bookings',
   AuthMiddleware.isAuthenticated,
   BookingController.getAllBookings,
 );
 
 router.get(
-  '/bookings/user',
+  '/bookings/user/:userId',
   AuthMiddleware.isAuthenticated,
   BookingController.getUserBookings,
 );
@@ -30,5 +30,6 @@ router.delete(
   BookingMiddleware.bookingExists,
   BookingController.cancelBooking,
 );
+router.post('/pay', BookingController.proceedToPay);
 
 export const BookingRoutes = router;

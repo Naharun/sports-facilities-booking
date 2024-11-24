@@ -7,6 +7,7 @@ const facilitySchema = new Schema<IFacility>({
   pricePerHour: { type: Number, required: true },
   location: { type: String, required: true },
   isDeleted: { type: Boolean, default: false },
+  image: { type: String, required: true },
 });
 
 export const Facility = model<IFacility>('Facility', facilitySchema);

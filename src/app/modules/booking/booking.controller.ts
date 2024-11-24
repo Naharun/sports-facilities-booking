@@ -6,6 +6,7 @@ import { Facility } from '../facility/facility.model';
 import { BookingService, getAvailableTimeSlots } from './booking.service';
 import { Booking } from './booking.model';
 import { formatDate } from '../../utils/dateFormatter';
+import stripe from '../../config/stripe.config';
 
 const checkAvailability = async (req: Request, res: Response) => {
   const date =
@@ -143,6 +144,52 @@ const cancelBooking = catchAsync(async (req: Request, res: Response) => {
     },
   });
 });
+////////////////////////////////////////////////////////
+
+const processPayment = async (req: Request, res: Response) => {
+  const { bookingId, paymentMethodId } = req.body;
+
+  // Retrieve booking details
+  const booking = await Booking.findById(bookingId).populate('facility');
+  if (!booking) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Booking not found');
+  }
+
+  const amount = (Number(booking.payableAmount) || 0) * 100;
+  try {
+    // Create payment intent with Stripe
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amount,
+      currency: 'usd', // Specify your currency
+      payment_method: paymentMethodId,
+      confirm: true,
+    });
+
+    if (paymentIntent.status === 'succeeded') {
+      booking.isBooked = 'confirmed';
+      booking.transactionId = paymentIntent.id;
+      await booking.save();
+
+      res.status(httpStatus.OK).json({
+        success: true,
+        message: 'Payment successful and booking confirmed',
+        data: booking,
+      });
+    } else {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Payment failed');
+    }
+  } catch (error) {
+    console.error('Payment error:', error);
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Payment processing failed',
+    );
+  }
+};
+
+const proceedToPay = catchAsync(async (req: Request, res: Response) => {
+  await processPayment(req, res); // Call the processPayment function
+});
 
 export const BookingController = {
   checkAvailability,
@@ -150,4 +197,5 @@ export const BookingController = {
   getAllBookings,
   getUserBookings,
   cancelBooking,
+  proceedToPay,
 };

@@ -10,7 +10,7 @@ const isAuthenticated = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers.authorization;
 
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    if (!authHeader || !authHeader.startsWith('Bearer')) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,
         'You have no access to this route!',

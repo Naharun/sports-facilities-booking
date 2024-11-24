@@ -35,6 +35,7 @@ const bookingSchema = new Schema<IBooking>(
       default: 'confirmed',
     },
   },
+
   { timestamps: true },
 );
 

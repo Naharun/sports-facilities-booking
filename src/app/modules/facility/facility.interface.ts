@@ -6,4 +6,5 @@ export interface IFacility extends Document {
   pricePerHour: number;
   location: string;
   isDeleted: boolean;
+  image: string;
 }
