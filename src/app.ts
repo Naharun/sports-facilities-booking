@@ -46,20 +46,30 @@ import { BookingRoutes } from './app/modules/booking/booking.route';
 
 const app: Application = express();
 
-// Updated CORS configuration
+app.use(express.json());
+
+app.options('*', cors());
+
+// CORS Configuration
 const allowedOrigins = [
   'https://sports-facilities-booking-client.vercel.app', // Live frontend
-  'http://localhost:5173', // Local testing
+  'http://localhost:5173', // Local frontend
 ];
 
-const corsOptions = {
-  origin: allowedOrigins,
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed HTTP methods
-  credentials: true, // Allow cookies and credentials
-};
-
-app.use(cors(corsOptions));
-app.use(express.json());
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  }),
+);
 
 // Application routes
 app.use('/api/auth', AuthRoutes);
@@ -68,13 +78,11 @@ app.use('/api', BookingRoutes);
 
 // Root route
 app.get('/', (req: Request, res: Response) => {
-  res.send('Hello World!');
+  res.send('Server is running!');
 });
 
-// Global error handler
+// Error handlers
 app.use(globalErrorHandler);
-
-// 404 Not Found handler
 app.use(notFound);
 
 export default app;
